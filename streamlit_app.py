@@ -121,6 +121,18 @@ if "map_text" in st.session_state:
         # Get the Wardley Map
         map, map_plot = create_wardley_map_plot(map_text)
 
+        # Encode as base 64
+        svg_b64 = base64.b64encode(map_plot.encode("utf-8")).decode("utf-8")
+
+        # Create CSS wrapper
+        css = '<p style="text-align:center; display: flex; justify-content: {};">'.format("center")
+
+        # Create HTML
+        html_map = r'{}<img src="data:image/svg+xml;base64,{}"/>'.format(css, svg_b64)
+
+        # Write the HTML
+        st.write(html_map, unsafe_allow_html=True)
+
         # Display any warnings drawing the map
         if map.warnings:
             st.write("Warnings parsing and the drawing map")
