@@ -102,7 +102,7 @@ if map_selection == "Select from GitHub":
 if "map_text" in st.session_state:
 
     # Get the Wardley Map
-    map, map_plot = create_wardley_map_plot(map_text)
+    map, map_plot = create_wardley_map_plot(st.session_state.map_text)
     svg_map = create_svg_map(map_plot)
     
     # Encode as base 64
