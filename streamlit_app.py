@@ -109,24 +109,24 @@ if "map_text" in st.session_state:
         if TITLE:
             st.markdown(f"### {TITLE}")
 
-        # Get the Wardley Map
-        map, map_plot = create_wardley_map_plot(map_text)
-        svg_map = create_svg_map(map_plot)
-
-        # Encode as base 64
-        svg_b64 = base64.b64encode(svg_map.encode("utf-8")).decode("utf-8")
-
-        # Create CSS wrapper
-        css = '<p style="text-align:center; display: flex; justify-content: {};">'.format("center")
-
-        # Create HTML
-        html_map = r'{}<img src="data:image/svg+xml;base64,{}"/>'.format(css, svg_b64)
-
-        # Write the HTML
-        st.write(html_map, unsafe_allow_html=True)
-
         # Display any warnings drawing the map
         if map.warnings:
             st.write("Warnings parsing and the drawing map")
             for map_message in map.warnings:
                 st.warning(map_message)
+
+# Get the Wardley Map
+map, map_plot = create_wardley_map_plot(map_text)
+svg_map = create_svg_map(map_plot)
+
+# Encode as base 64
+svg_b64 = base64.b64encode(svg_map.encode("utf-8")).decode("utf-8")
+
+# Create CSS wrapper
+css = '<p style="text-align:center; display: flex; justify-content: {};">'.format("center")
+
+# Create HTML
+html_map = r'{}<img src="data:image/svg+xml;base64,{}"/>'.format(css, svg_b64)
+
+# Write the HTML
+st.write(html_map, unsafe_allow_html=True)
