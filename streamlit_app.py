@@ -1,4 +1,4 @@
-import os, re, io, base64
+import os, re, base64
 import streamlit as st
 from github import Github
 from wardley_map import create_wardley_map_plot, get_owm_map, parse_wardley_map, create_svg_map
@@ -113,11 +113,17 @@ if "map_text" in st.session_state:
         map, map_plot = create_wardley_map_plot(map_text)
         svg_map = create_svg_map(map_plot)
 
-        # Save the figure to a BytesIO object
-        img_data = io.BytesIO()
-        fig.savefig(img_data, format="png", dpi=300, bbox_inches="tight")
-        plt.close(fig)
-        img_data.seek(0)
+        # Encode as base 64
+        svg_b64 = base64.b64encode(svg_map.encode("utf-8")).decode("utf-8")
+
+        # Create CSS wrapper
+        css = '<p style="text-align:center; display: flex; justify-content: {};">'.format("center")
+
+        # Create HTML
+        html_map = r'{}<img src="data:image/svg+xml;base64,{}"/>'.format(css, svg_b64)
+
+        # Write the HTML
+        st.write(html_map, unsafe_allow_html=True)
 
         # Display any warnings drawing the map
         if map.warnings:
