@@ -1,0 +1,11 @@
+streamlit
+streamlit-option-menu
+langchain-community
+langchain-core
+langchain-openai
+langchain
+networkx
+pyvis
+pygithub
+pyyaml
+wardleymap
