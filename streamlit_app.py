@@ -32,10 +32,10 @@ def reset_map():
 st.set_page_config(page_title="Chat with your Map", layout="wide")
 
 if "map_text" not in st.session_state:
-    st.session_state["map_text"] = []
+    st.session_state["map_text"] = ""
 
 if "current_map_id" not in st.session_state:
-    st.session_state["current_map_id"] = []
+    st.session_state["current_map_id"] = ""
 
 try:
     g = Github(GITHUB)
@@ -87,43 +87,48 @@ if map_selection != "Select from GitHub":
         reset_map()
         st.session_state["current_map_id"] = MAP_ID
         st.session_state["map_text"] = get_owm_map(MAP_ID)
-
-if map_selection == "Select from GitHub":
+        if not st.session_state["map_text"]:
+            st.error("Failed to retrieve map text. Please check the Map ID and try again.")
+else:
     if st.session_state.get("current_map_id") != MAP_ID:
         reset_map()
         st.session_state["current_map_id"] = MAP_ID
         st.session_state["map_text"] = st.session_state["file_content"]
 
 # Display the map in the sidebar
-if "map_text" in st.session_state:
+if st.session_state.get("map_text"):
+    try:
+        # Get the Wardley Map
+        map, map_plot = create_wardley_map_plot(st.session_state["map_text"])
+        svg_map = create_svg_map(map_plot)
 
-    # Get the Wardley Map
-    map, map_plot = create_wardley_map_plot(st.session_state["map_text"])
-    svg_map = create_svg_map(map_plot)
+        # Encode as base 64
+        svg_b64 = base64.b64encode(svg_map.encode("utf-8")).decode("utf-8")
 
-    # Encode as base 64
-    svg_b64 = base64.b64encode(svg_map.encode("utf-8")).decode("utf-8")
+        # Create CSS wrapper
+        css = '<p style="text-align:center; display: flex; justify-content: center;">'
 
-    # Create CSS wrapper
-    css = '<p style="text-align:center; display: flex; justify-content: {};">'.format("center")
+        # Create HTML
+        html_map = r'{}<img src="data:image/svg+xml;base64,{}"/>'.format(css, svg_b64)
 
-    # Create HTML
-    html_map = r'{}<img src="data:image/svg+xml;base64,{}"/>'.format(css, svg_b64)
+        # Write the HTML
+        st.write(html_map, unsafe_allow_html=True)
 
-    # Write the HTML
-    st.write(html_map, unsafe_allow_html=True)
+        with st.sidebar:
+            TITLE = "No Title"
+            map_text = st.session_state["map_text"]
+            for line in map_text.split("\n"):
+                if line.startswith("title"):
+                    TITLE = line.split("title ")[1]
+            if TITLE:
+                st.markdown(f"### {TITLE}")
 
-    with st.sidebar:
-        TITLE = "No Title"
-        map_text = st.session_state["map_text"]
-        for line in map_text.split("\n"):
-            if line.startswith("title"):
-                TITLE = line.split("title ")[1]
-        if TITLE:
-            st.markdown(f"### {TITLE}")
-
-        # Display any warnings drawing the map
-        if map.warnings:
-            st.write("Warnings parsing and drawing the map")
-            for map_message in map.warnings:
-                st.warning(map_message)
+            # Display any warnings drawing the map
+            if map.warnings:
+                st.write("Warnings parsing and drawing the map")
+                for map_message in map.warnings:
+                    st.warning(map_message)
+    except Exception as e:
+        st.error(f"An error occurred while creating the map: {e}")
+else:
+    st.info("Please select a map to display.")
