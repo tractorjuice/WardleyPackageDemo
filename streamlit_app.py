@@ -1,8 +1,9 @@
 import os
 import base64
+import requests
 import streamlit as st
 from github import Github, GithubException
-from wardley_map import create_wardley_map_plot, get_owm_map, create_svg_map
+from wardley_map import create_wardley_map_plot, create_svg_map
 
 API_ENDPOINT = "https://api.onlinewardleymaps.com/v1/maps/fetch?id="
 GITHUB = st.secrets["GITHUB"]
@@ -28,6 +29,19 @@ def reset_map():
     st.session_state["past"] = []
     st.session_state["generated"] = []
     st.session_state["disabled_buttons"] = []
+
+def get_owm_map(map_id):
+    try:
+        response = requests.get(f"{API_ENDPOINT}{map_id}")
+        response.raise_for_status()
+        map_data = response.json()
+        if 'map' in map_data:
+            return map_data['map']
+        else:
+            return None
+    except requests.exceptions.RequestException as e:
+        st.error(f"Error fetching map data: {e}")
+        return None
 
 st.set_page_config(page_title="Chat with your Map", layout="wide")
 
