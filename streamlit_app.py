@@ -94,18 +94,19 @@ else:
     MAP_ID = st.sidebar.text_input("Enter Map ID:", key="map_id_input")
     selected_name = MAP_ID
 
-if map_selection != "Select from GitHub":
-    if st.session_state.get("current_map_id") != MAP_ID:
-        reset_map()
-        st.session_state["current_map_id"] = MAP_ID
-        st.session_state["map_text"] = get_owm_map(MAP_ID)
-        if not st.session_state["map_text"]:
-            st.error("Failed to retrieve map text. Please check the Map ID and try again.")
-else:
-    if st.session_state.get("current_map_id") != MAP_ID:
-        reset_map()
-        st.session_state["current_map_id"] = MAP_ID
-        st.session_state["map_text"] = st.session_state["file_content"]
+if MAP_ID:
+    if map_selection != "Select from GitHub":
+        if st.session_state.get("current_map_id") != MAP_ID:
+            reset_map()
+            st.session_state["current_map_id"] = MAP_ID
+            st.session_state["map_text"] = get_owm_map(MAP_ID)
+            if not st.session_state["map_text"]:
+                st.error("Failed to retrieve map text. Please check the Map ID and try again.")
+    else:
+        if st.session_state.get("current_map_id") != MAP_ID:
+            reset_map()
+            st.session_state["current_map_id"] = MAP_ID
+            st.session_state["map_text"] = st.session_state["file_content"]
 
 # Display the map in the sidebar
 if st.session_state.get("map_text"):
