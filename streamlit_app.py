@@ -13,12 +13,10 @@ MAP_ID = None
 
 # Dictionary of map IDs with user-friendly names
 map_dict = {
-    "Tea Shop": "QRXryFJ8Q1NxhbHKQL",
-    "Agriculture 2023 Research": "gQuu7Kby3yYveDngy2",
-    "AI & Entertainment": "1LSW3jTlx4u16T06di",
-    "Prompt Engineering": "mUJtoSmOfqlfXhNMJP",
-    "Microsoft Fabric": "K4DjW1RdsbUWV8JzoP",
-    "Fixed Penalty Notices": "gTTfD4r2mORudVFKge",
+    "Tea Shop": "b74c93cc19cfb8879b",
+    "Agriculture 2023 Research": "163ed036fe13308f13",
+    "AI & Entertainment": "aa08b8996aff3bca85",
+    "Prompt Engineering": "38dfbb3dfc0f891d28",
 }
 
 # Reset the map on page reload
