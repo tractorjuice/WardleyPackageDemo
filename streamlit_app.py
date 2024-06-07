@@ -33,8 +33,8 @@ def get_owm_map(map_id):
         response = requests.get(f"{API_ENDPOINT}{map_id}")
         response.raise_for_status()
         map_data = response.json()
-        if 'map' in map_data:
-            return map_data['map']
+        if 'text' in map_data:
+            return map_data['text']
         else:
             return None
     except requests.exceptions.RequestException as e:
