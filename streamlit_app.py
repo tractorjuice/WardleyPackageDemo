@@ -5,7 +5,7 @@ import streamlit as st
 from github import Github, GithubException
 from wardley_map import create_wardley_map_plot, create_svg_map
 
-API_ENDPOINT = "https://api.onlinewardleymaps.com/v1/maps/fetch?id="
+API_ENDPOINT = "https://api.onlinewardleymaps.com/v2/maps/fetch?id="
 GITHUB = st.secrets["GITHUB"]
 GITHUBREPO = "swardley/MAP-REPOSITORY"
 DEBUG = True  # True to overwrite files that already exist
