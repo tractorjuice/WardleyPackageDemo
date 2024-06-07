@@ -60,7 +60,7 @@ except GithubException as e:
 
 map_selection = st.sidebar.radio(
     "Map Selection",
-    ("Select from GitHub", "Select from List", "Enter Map ID"),
+    ("Select from List", "Enter Map ID", "Select from GitHub"),
     help="Select GitHub to get a list of Simon's latest research.\n\nSelect from list to get predefined maps.\n\nSelect Enter Map ID to provide your own Onlinewardleymaps id",
     key="map_selection",
 )
